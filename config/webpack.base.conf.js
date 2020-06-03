@@ -94,7 +94,9 @@ const generateConfig = env => {
   }
 }
 
-module.exports = env => {
-  const config = env === 'production' ? productionConfig : developmentConfig
-  return merge(generateConfig(env), config)
+console.log('*************', process.env.NODE_ENV)
+
+module.exports = () => {
+  const config = process.env.NODE_ENV === 'production' ? productionConfig : developmentConfig
+  return merge(generateConfig(process.env.NODE_ENV), config)
 }
