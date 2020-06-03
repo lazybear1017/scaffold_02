@@ -8,6 +8,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const chalk = require('chalk')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
+console.log('   当前环境为：', process.env.NODE_ENV)
+
 const generateConfig = env => {
   const eslintLoader = [
     {
@@ -91,14 +93,13 @@ const generateConfig = env => {
       }),
       new CleanWebpackPlugin(),
       new ProgressBarPlugin({
-        format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:current/:total)' + ' (:elapsed seconds)',
+        format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:current/:total) modules ' + ' (:elapsed seconds)',
         clear: true // 打包完成时清楚进度条
       })
+
     ]
   }
 }
-
-console.log('*************', process.env.NODE_ENV)
 
 module.exports = () => {
   const config = process.env.NODE_ENV === 'production' ? productionConfig : developmentConfig
