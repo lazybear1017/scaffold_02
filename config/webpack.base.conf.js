@@ -42,7 +42,6 @@ const generateConfig = env => {
       }
     }
   ]
-
   const imageLoader = [
     {
       loader: 'url-loader',
@@ -53,7 +52,6 @@ const generateConfig = env => {
       }
     }
   ]
-
   const styleLoader =
       env === 'production'
         ? cssExtractLoader // 生产环境下压缩 css 代码
