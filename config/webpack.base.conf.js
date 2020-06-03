@@ -5,6 +5,7 @@ const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin') // 将 css 单独打包成文件
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
 const generateConfig = env => {
   const eslintLoader = [
@@ -87,7 +88,8 @@ const generateConfig = env => {
           collapseWhitespace: true
         }
       }),
-      new CleanWebpackPlugin()
+      new CleanWebpackPlugin(),
+      new ProgressBarPlugin()
     ]
   }
 }
