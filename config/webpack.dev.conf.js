@@ -8,6 +8,7 @@ module.exports = {
   devtool: 'source-map', // 调试源码
   devServer: {
     host: '0.0.0.0',
+    port: '8080',
     contentBase: path.join(__dirname, '../dist/'),
     overlay: true,
     watchContentBase: true,
@@ -40,7 +41,7 @@ module.exports = {
           '你的应用程序运行在: http://localhost:8080/'
         ],
         notes: [
-          `你也能够使用下面地址访问: \n\n    http://${getIp().ipv4Ip}:8080/\n    http://${getIp().host}:8080/\n    http://127.0.0.1:8080/\n`
+          `你也能够使用下面地址访问: \n\n${getIp().ipv4Ip && `    http://${getIp().ipv4Ip}:8080/\n`}${getIp().host && `    http://${getIp().host}:8080/\n`}    http://127.0.0.1:8080/\n`
         ]
       },
       onErrors: function () { /* omitted long function */ }

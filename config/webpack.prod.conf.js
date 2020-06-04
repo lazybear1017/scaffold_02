@@ -6,14 +6,26 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all',
+      name: false,
+      minSize: 614400,
+      maxSize: 1024000,
       cacheGroups: {
+        styles: {
+          name: 'style',
+          test: /\.(le|c)ss$/,
+          chunks: 'all',
+          enforce: true
+        },
         lodash: {
           name: 'lodash', // 单独将 lodash 拆包
           priority: 15,
           test: /[\\/]node_modules[\\/]lodash[\\/]/
         }
       }
-    }
+    },
+    sideEffects: true,
+    removeEmptyChunks: true,
+    mergeDuplicateChunks: true
   },
   plugins: [
     new MiniCssExtractPlugin({

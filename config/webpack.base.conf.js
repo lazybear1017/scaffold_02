@@ -98,10 +98,29 @@ const generateConfig = env => {
             'postcss-loader',
             'less-loader'
           ] : [
-            'style-loader',
-            'css-loader',
-            'postcss-loader',
-            'less-loader'
+            {
+              loader: 'style-loader'
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                modules: false,
+                sourceMap: true,
+                importLoaders: 1
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                sourceMap: true
+              }
+            }
           ]
         }
       ]
