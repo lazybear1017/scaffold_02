@@ -7,18 +7,18 @@ module.exports = {
     splitChunks: {
       chunks: 'all',
       cacheGroups: {
-        jquery: {
-          name: 'chunk-jquery', // 单独将 jquery 拆包
+        lodash: {
+          name: 'lodash', // 单独将 lodash 拆包
           priority: 15,
-          test: /[\\/]node_modules[\\/]jquery[\\/]/
+          test: /[\\/]node_modules[\\/]lodash[\\/]/
         }
       }
     }
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css'
+      filename: 'css/[name]-[hash:8].css',
+      chunkFilename: 'css/[id]-[hash:8].css'
     }),
     // 压缩 css
     new OptimizeCssAssetsPlugin({

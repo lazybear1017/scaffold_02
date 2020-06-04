@@ -11,77 +11,102 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 console.log('   当前环境为：', process.env.NODE_ENV)
 
 const generateConfig = env => {
-  const eslintLoader = [
-    {
-      loader: 'eslint-loader'
-    }
-  ]
-  const scriptLoader = [
-    {
-      loader: 'babel-loader'
-    }
-  ]
-  const cssLoader = [
-    'style-loader',
-    'css-loader',
-    'postcss-loader',
-    'less-loader'
-  ]
-  const cssExtractLoader = [
-    {
-      loader: MiniCssExtractPlugin.loader
-    },
-    'css-loader',
-    'postcss-loader', // 使用 postcss 为 css 加上浏览器前缀
-    'less-loader' // 使用 sass-loader 将 scss 转为 css
-  ]
-  const fontLoader = [
-    {
-      loader: 'url-loader',
-      options: {
-        name: '[name]-[hash:5].min.[ext]',
-        limit: 5000, // fonts file size <= 5KB, use 'base64'; else, output svg file
-        publicPath: 'fonts/',
-        outputPath: 'fonts/'
-      }
-    }
-  ]
-  const imageLoader = [
-    {
-      loader: 'url-loader',
-      options: {
-        name: '[name]-[hash:5].min.[ext]',
-        limit: 10000, // size <= 10KB
-        outputPath: 'images/'
-      }
-    }
-  ]
-  const styleLoader =
-      env === 'production'
-        ? cssExtractLoader // 生产环境下压缩 css 代码
-        : cssLoader // 开发环境：页内样式嵌入
-
   return {
     entry: {
       index: './src/index.js'
     },
     output: {
-      publicPath: env === 'development' ? '/' : './',
-      path: path.resolve(__dirname, '..', 'dist'),
-      filename: '[name]-[hash:5].bundle.js',
-      chunkFilename: '[name]-[hash:5].chunk.js'
+      path: path.resolve(__dirname, 'dist'), // 打包文件的输出目录
+      publicPath: env === 'development' ? '/' : './', // js 引用的路径或者 CDN 地址
+      filename: 'js/[name]-entry-[hash:8].js', // 代码打包后的文件名  'index_entry_-ce3a6217.js'
+      chunkFilename: 'js/[name]-[hash:8].chunk.js' // splitChunk打包文件名
     },
     module: {
       rules: [
-        { test: /\.js$/, exclude: /(node_modules)/, enforce: 'pre', use: eslintLoader },
-        { test: /\.js$/, exclude: /(node_modules)/, use: scriptLoader },
-        { test: /\.(le|c)ss$/, use: styleLoader },
-        { test: /\.(eot|woff2?|ttf|svg)$/, use: fontLoader },
-        { test: /\.(png|jpg|jpeg|gif)$/, use: imageLoader }
+        // eslint-loader
+        {
+          test: /\.(jsx?)$/,
+          enforce: 'pre',
+          exclude: /(node_modules)/,
+          use: [
+            {
+              loader: 'eslint-loader',
+              options: {
+                emitError: false,
+                emitWarning: true,
+                formatter: 'eslint/lib/cli-engine/formatters/codeframe'
+              }
+            }
+          ]
+        },
+        // babel-loader
+        {
+          test: /\.(jsx?)$/,
+          exclude: /(node_modules)/,
+          use: [
+            {
+              loader: 'babel-loader'
+            }
+          ]
+        },
+        // url-loader 图片
+        {
+          test: /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                name: 'images/[name].[hash:8].[ext]'
+              }
+            }
+          ]
+        },
+        // url-loader 音视频
+        {
+          test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                name: 'media/[name].[hash:8].[ext]'
+              }
+            }
+          ]
+        },
+        // url-loader 字体
+        {
+          test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                name: 'fonts/[name].[hash:8].[ext]'
+              }
+            }
+          ]
+        },
+        {
+          test: /\.(le|c)ss$/,
+          use: env === 'production' ? [
+            {
+              loader: MiniCssExtractPlugin.loader
+            },
+            'css-loader',
+            'postcss-loader',
+            'less-loader'
+          ] : [
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            'less-loader'
+          ]
+        }
       ]
     },
     plugins: [
-      // 开发环境和生产环境二者均需要的插件
       new HtmlWebpackPlugin({
         title: 'webpack4 实战',
         filename: 'index.html',
