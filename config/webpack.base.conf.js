@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin') // 将 css 单�
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const chalk = require('chalk')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 console.log('   当前环境为：', process.env.NODE_ENV)
 
@@ -139,8 +140,15 @@ const generateConfig = env => {
       new ProgressBarPlugin({
         format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:current/:total) modules ' + ' (:elapsed seconds)',
         clear: true // 打包完成时清楚进度条
+      }),
+      new StyleLintPlugin({
+        context: 'src',
+        configFile: path.resolve(__dirname, '../stylelint.config.js'),
+        files: '**/*.less',
+        failOnError: false,
+        quiet: true,
+        syntax: 'less'
       })
-
     ]
   }
 }
